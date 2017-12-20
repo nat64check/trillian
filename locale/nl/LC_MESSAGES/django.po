@@ -1,0 +1,302 @@
+# Dutch translation of NAT64Check's Zaphod.
+# Copyright (C) 2017 S.J.M. Steffann
+# This file is distributed under the same license as the package.
+# Sander Steffann <sander@steffann.nl>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-20 14:06+0000\n"
+"PO-Revision-Date: 2017-12-20 15:08+0100\n"
+"Last-Translator: Sander Steffann <sander@steffann.nl>\n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.5\n"
+
+#: templates/admin/base_site.html:5
+msgid "NAT64Check Trillian admin"
+msgstr "NAT64Check Trillian beheer"
+
+#: templates/admin/base_site.html:8
+msgid "Trillian administration"
+msgstr "Trillian beheer"
+
+#~ msgid "country"
+#~ msgstr "land"
+
+#~ msgid "admin"
+#~ msgstr "beheerder"
+
+#~ msgid "version"
+#~ msgstr "versie"
+
+#~ msgid "Test-cluster instances"
+#~ msgstr "Test-cluster instanties"
+
+#~ msgid "name"
+#~ msgstr "naam"
+
+#~ msgid "hostname"
+#~ msgstr "hostnaam"
+
+#~ msgid "Please provide a valid host name"
+#~ msgstr "Geef alstublient een geldige hostnaam op"
+
+#~ msgid "is active"
+#~ msgstr "is actief"
+
+#~ msgid "location"
+#~ msgstr "lokatie"
+
+#~ msgid "Trillian"
+#~ msgstr "Trillian"
+
+#~ msgid "type"
+#~ msgstr "type"
+
+#~ msgid "browser name"
+#~ msgstr "browsernaam"
+
+#~ msgid "browser version"
+#~ msgstr "browserversie"
+
+#~ msgid "instance type"
+#~ msgstr "instantie-type"
+
+#~ msgid "IPv4-only"
+#~ msgstr "IPv4-only"
+
+#~ msgid "IPv6-only"
+#~ msgstr "IPv6-only"
+
+#~ msgid "Dual-Stack"
+#~ msgstr "Dual-Stack"
+
+#~ msgid "IPv6 with NAT64"
+#~ msgstr "IPv6 met NAT64"
+
+#~ msgid "addresses"
+#~ msgstr "adressen"
+
+#~ msgid "{trillian}: {name}"
+#~ msgstr "{trillian}: {name}"
+
+#~ msgid "Location not found"
+#~ msgstr "Lokatie niet gevonden"
+
+#~ msgid "Search"
+#~ msgstr "Zoek"
+
+#~ msgid "Address"
+#~ msgstr "Adres"
+
+#~ msgid "Trillians"
+#~ msgstr "Trillians"
+
+#~ msgid "Measurement data"
+#~ msgstr "Meting-gegevens"
+
+#~ msgid "Critical"
+#~ msgstr "Kritisch"
+
+#~ msgid "Error"
+#~ msgstr "Fout"
+
+#~ msgid "Warning"
+#~ msgstr "Waarschuwing"
+
+#~ msgid "Info"
+#~ msgstr "Info"
+
+#~ msgid "Debug"
+#~ msgstr "Debug"
+
+#~ msgid "owner"
+#~ msgstr "eigenaar"
+
+#~ msgid "Name your test schedule, must be unique"
+#~ msgstr "Geef uw testschema een naam, moet uniek zijn"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "The URL you want to test"
+#~ msgstr "De URL die u wilt testen"
+
+#~ msgid "The data centres from where you want this URL to be tested"
+#~ msgstr "De datacenters vanaf waar u deze URL wilt testen"
+
+#~ msgid "time"
+#~ msgstr "tijd"
+
+#~ msgid "The time of day in UTC when you want the tests to be scheduled"
+#~ msgstr "De tijd van de dag in UTC waarop u deze tests wilt inplannen"
+
+#~ msgid "start"
+#~ msgstr "start"
+
+#~ msgid "The first day that you want the tests to be run"
+#~ msgstr "De eerste dag dat u deze tests wilt uitvoeren"
+
+#~ msgid "end"
+#~ msgstr "einde"
+
+#~ msgid "The last day that you want the tests to be run"
+#~ msgstr "De laatste dag dat u deze tests wilt uitvoeren"
+
+#~ msgid "frequency"
+#~ msgstr "frequentie"
+
+#~ msgid "Every day"
+#~ msgstr "Elke dag"
+
+#~ msgid "Every week"
+#~ msgstr "Elke week"
+
+#~ msgid "Every month"
+#~ msgstr "Elke maand"
+
+#~ msgid "Frequency to schedule the tests. Can be \"D\" (daily), \"W\" (weekly) or \"M\" (monthly)"
+#~ msgstr "Frequentie waarmee u deze tests wilt inplannen. Kan \"D\" (dagelijks), \"W\" (wekelijks) of \"M\" (maandelijks) zijn"
+
+#~ msgid "is public"
+#~ msgstr "is publiek"
+
+#~ msgid "Whether the test results should be publicly visible"
+#~ msgstr "Of de testresultaten publiekelijk toegankelijk zullen zijn"
+
+#~ msgid "schedule"
+#~ msgstr "schema"
+
+#~ msgid "schedules"
+#~ msgstr "schema's"
+
+#~ msgid "requested"
+#~ msgstr "aangevraagd"
+
+#~ msgid "started"
+#~ msgstr "gestart"
+
+#~ msgid "finished"
+#~ msgstr "afgerond"
+
+#~ msgid "image score"
+#~ msgstr "score voor afbeelding"
+
+#~ msgid "image feedback"
+#~ msgstr "feedback voor afbeelding"
+
+#~ msgid "resource score"
+#~ msgstr "score voor bronnen"
+
+#~ msgid "resource feedback"
+#~ msgstr "feedback voor bronnen"
+
+#~ msgid "overall score"
+#~ msgstr "score voor geheel"
+
+#~ msgid "overall feedback"
+#~ msgstr "feedback voor geheel"
+
+#~ msgid "test run"
+#~ msgstr "test-run"
+
+#~ msgid "test runs"
+#~ msgstr "test-runs"
+
+#~ msgid "{url} completed on {when}"
+#~ msgstr "{url} afgerond op {when}"
+
+#~ msgid "{url} started on {when}"
+#~ msgstr "{url} gestart op {when}"
+
+#~ msgid "{url} requested on {when}"
+#~ msgstr "{url} aangevraagd op {when}"
+
+#~ msgid "severity"
+#~ msgstr "ernstigheid"
+
+#~ msgid "message"
+#~ msgstr "bericht"
+
+#~ msgid "test run message"
+#~ msgstr "test-run bericht"
+
+#~ msgid "test run messages"
+#~ msgstr "test-run berichten"
+
+#~ msgid "ID on Trillian"
+#~ msgstr "ID op Trillian"
+
+#~ msgid "callback auth code"
+#~ msgstr "callback auth code"
+
+#~ msgid "DNS results"
+#~ msgstr "DNS resultaten"
+
+#~ msgid "instance run"
+#~ msgstr "instantie-run"
+
+#~ msgid "instance runs"
+#~ msgstr "instantie-runs"
+
+#~ msgid "{obj.testrun} on {obj.trillian}"
+#~ msgstr "{obj.testrun} op {obj.trillian}"
+
+#~ msgid "instance run message"
+#~ msgstr "instantie-run bericht"
+
+#~ msgid "instance run messages"
+#~ msgstr "instantie-run berichten"
+
+#~ msgid "Marvin"
+#~ msgstr "Marvin"
+
+#~ msgid "instance run result"
+#~ msgstr "instantie-run resultaat"
+
+#~ msgid "instance run results"
+#~ msgstr "instantie-run resultaten"
+
+#~ msgid "{obj.instancerun} on {obj.marvin}"
+#~ msgstr "{obj.instancerun} op {obj.marvin}"
+
+#~ msgid "Django site admin"
+#~ msgstr "Django site beheer"
+
+#~ msgid "countries"
+#~ msgstr "landen"
+
+#~ msgid "World regions and statistics"
+#~ msgstr "Wereldregio's en statistieken"
+
+#~ msgid "code"
+#~ msgstr "code"
+
+#~ msgid "parent"
+#~ msgstr "bovenliggend"
+
+#~ msgid "level"
+#~ msgstr "niveau"
+
+#~ msgid "region"
+#~ msgstr "regio"
+
+#~ msgid "regions"
+#~ msgstr "regio's"
+
+#~ msgid "The new password for this user"
+#~ msgstr "Het nieuwe wachtwoord voor deze gebruiker"
+
+#~ msgid "English"
+#~ msgstr "Engels"
+
+#~ msgid "Dutch"
+#~ msgstr "Nederlands"
+
+#~ msgid "Slovenian"
+#~ msgstr "Sloveens"
