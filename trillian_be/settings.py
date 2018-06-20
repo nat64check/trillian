@@ -15,7 +15,8 @@ import os
 from django.utils.translation import ugettext_lazy as _
 
 ADMINS = [
-    ('Sander Steffann', 'sander@steffann.nl'),
+    ('Sander Steffann', 'sander@nat64check.org'),
+    ('Jan Žorž', 'jan@nat64check.org'),
 ]
 
 MANAGERS = ADMINS
@@ -23,7 +24,8 @@ MANAGERS = ADMINS
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEBUG = False
+DEBUG = os.environ.get('DJANGO_DEBUG', '0') == '1'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = ['localhost', '::1', '127.0.0.1']
 
@@ -88,7 +90,10 @@ WSGI_APPLICATION = 'trillian_be.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'trillian_be',
+        'HOST': 'db',
+        'NAME': 'trillian',
+        'USER': 'postgres',
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
         'CONN_MAX_AGE': 900,
     }
 }
@@ -183,9 +188,6 @@ SECURE_BROWSER_XSS_FILTER = True
 
 # Refuse to be framed
 X_FRAME_OPTIONS = 'DENY'
-
-# Override default setting with local settings
-from .local_settings import *
 
 if DEBUG:
     INSTALLED_APPS += [
