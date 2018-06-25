@@ -15,17 +15,21 @@ Including another URL conf
 """
 
 from django.conf import settings
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework_swagger.views import get_swagger_view
 
+from instances.urls import instances_router
+from measurements.urls import measurements_router
 from trillian_be.api.views import UserViewSet
 
 router = DefaultRouter()
 router.register('users', UserViewSet, base_name='user')
+router.registry.extend(instances_router.registry)
+router.registry.extend(measurements_router.registry)
 
 urlpatterns = [
     url(r'^swagger/$', get_swagger_view(title='NAT64Check Trillian API')),
@@ -33,6 +37,7 @@ urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
     url(r'^i18n/', include('django.conf.urls.i18n')),
+
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/$', RedirectView.as_view(url='v1')),
     url(r'^api/v1/', include(router.urls)),

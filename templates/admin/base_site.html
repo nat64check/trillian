@@ -2,10 +2,16 @@
 {% load i18n %}
 {% load countries %}
 
-{% block title %}{{ title }} | {{ site_title|default:_('NAT64Check Trillian admin') }}{% endblock %}
+{% block title %}
+    {{ title }} | {% blocktrans %}NAT64Check Trillian {{ APP_VERSION }} admin{% endblocktrans %}
+{% endblock %}
 
 {% block branding %}
-    <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Trillian administration') }}</a></h1>
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            {% blocktrans %}Trillian {{ APP_VERSION }} administration{% endblocktrans %}
+        </a>
+    </h1>
 {% endblock %}
 
 {% block userlinks %}

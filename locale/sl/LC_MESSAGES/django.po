@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-20 14:06+0000\n"
+"POT-Creation-Date: 2018-06-21 20:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,10 +19,198 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
 "%100==4 ? 2 : 3);\n"
 
+#: instances/admin_filters.py:6 instances/models.py:14 instances/models.py:41
+msgid "version"
+msgstr ""
+
+#: instances/apps.py:7
+msgid "Test-cluster instances"
+msgstr ""
+
+#: instances/models.py:9
+msgid "name"
+msgstr ""
+
+#: instances/models.py:10
+msgid "hostname"
+msgstr ""
+
+#: instances/models.py:11
+msgid "Please provide a valid host name"
+msgstr ""
+
+#: instances/models.py:13
+msgid "type"
+msgstr ""
+
+#: instances/models.py:16
+msgid "browser name"
+msgstr ""
+
+#: instances/models.py:17 instances/models.py:47
+msgid "browser version"
+msgstr ""
+
+#: instances/models.py:19
+msgid "instance type"
+msgstr ""
+
+#: instances/models.py:20
+msgid "IPv4-only"
+msgstr ""
+
+#: instances/models.py:21
+msgid "IPv6-only"
+msgstr ""
+
+#: instances/models.py:22
+msgid "IPv6 with NAT64"
+msgstr ""
+
+#: instances/models.py:24
+msgid "addresses"
+msgstr ""
+
+#: instances/models.py:26
+msgid "first seen"
+msgstr ""
+
+#: instances/models.py:27 instances/models.py:53
+msgid "last seen"
+msgstr ""
+
+#: instances/models.py:29
+msgid "alive"
+msgstr ""
+
+#: instances/models.py:30
+msgid "parallel tasks limit"
+msgstr ""
+
+#: instances/templates/searchable_osm.html:28
+msgid "Location not found"
+msgstr ""
+
+#: instances/templates/searchable_osm.html:51
+msgid "Search"
+msgstr ""
+
+#: instances/templates/searchable_osm.html:52
+msgid "Address"
+msgstr ""
+
+#: measurements/apps.py:7
+msgid "Measurement data"
+msgstr ""
+
+#: measurements/models.py:11
+msgid "Critical"
+msgstr ""
+
+#: measurements/models.py:12
+msgid "Error"
+msgstr ""
+
+#: measurements/models.py:13
+msgid "Warning"
+msgstr ""
+
+#: measurements/models.py:14
+msgid "Info"
+msgstr ""
+
+#: measurements/models.py:15
+msgid "Debug"
+msgstr ""
+
+#: measurements/models.py:20
+msgid "URL"
+msgstr ""
+
+#: measurements/models.py:22
+msgid "Callback URL"
+msgstr ""
+
+#: measurements/models.py:23
+msgid "callback auth code"
+msgstr ""
+
+#: measurements/models.py:25
+msgid "requested"
+msgstr ""
+
+#: measurements/models.py:26
+msgid "started"
+msgstr ""
+
+#: measurements/models.py:27
+msgid "finished"
+msgstr ""
+
+#: measurements/models.py:29
+msgid "DNS results"
+msgstr ""
+
+#: measurements/models.py:32 measurements/models.py:49
+msgid "instance run"
+msgstr ""
+
+#: measurements/models.py:33
+msgid "instance runs"
+msgstr ""
+
+#: measurements/models.py:38
+#, python-brace-format
+msgid "{url} completed on {when}"
+msgstr ""
+
+#: measurements/models.py:41
+#, python-brace-format
+msgid "{url} started on {when}"
+msgstr ""
+
+#: measurements/models.py:44
+#, python-brace-format
+msgid "{url} requested on {when}"
+msgstr ""
+
+#: measurements/models.py:51
+msgid "Marvin"
+msgstr ""
+
+#: measurements/models.py:57
+msgid "instance run result"
+msgstr ""
+
+#: measurements/models.py:58
+msgid "instance run results"
+msgstr ""
+
+#: measurements/models.py:61
+#, python-brace-format
+msgid "{obj.instancerun} on {obj.marvin}"
+msgstr ""
+
 #: templates/admin/base_site.html:5
 msgid "NAT64Check Trillian admin"
 msgstr ""
 
 #: templates/admin/base_site.html:8
 msgid "Trillian administration"
+msgstr ""
+
+#: trillian_be/api/views.py:13
+msgid "The new password for this user"
+msgstr ""
+
+#: trillian_be/settings.py:135
+msgid "English"
+msgstr ""
+
+#: trillian_be/settings.py:136
+msgid "Dutch"
+msgstr ""
+
+#: trillian_be/settings.py:137
+msgid "Slovenian"
 msgstr ""

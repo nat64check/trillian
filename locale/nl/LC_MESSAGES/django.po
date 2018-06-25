@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-20 14:06+0000\n"
+"POT-Creation-Date: 2018-06-21 20:28+0000\n"
 "PO-Revision-Date: 2017-12-20 15:08+0100\n"
 "Last-Translator: Sander Steffann <sander@steffann.nl>\n"
 "Language-Team: \n"
@@ -17,6 +17,178 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.5\n"
 
+#: instances/admin_filters.py:6 instances/models.py:14 instances/models.py:41
+msgid "version"
+msgstr "versie"
+
+#: instances/apps.py:7
+msgid "Test-cluster instances"
+msgstr "Test-cluster instanties"
+
+#: instances/models.py:9
+msgid "name"
+msgstr "naam"
+
+#: instances/models.py:10
+msgid "hostname"
+msgstr "hostnaam"
+
+#: instances/models.py:11
+msgid "Please provide a valid host name"
+msgstr "Geef alstublieft een geldige hostnaam op"
+
+#: instances/models.py:13
+msgid "type"
+msgstr "type"
+
+#: instances/models.py:16
+msgid "browser name"
+msgstr "browsernaam"
+
+#: instances/models.py:17 instances/models.py:47
+msgid "browser version"
+msgstr "browserversie"
+
+#: instances/models.py:19
+msgid "instance type"
+msgstr "instantie-type"
+
+#: instances/models.py:20
+msgid "IPv4-only"
+msgstr "IPv4-only"
+
+#: instances/models.py:21
+msgid "IPv6-only"
+msgstr "IPv6-only"
+
+#: instances/models.py:22
+msgid "IPv6 with NAT64"
+msgstr "IPv6 met NAT64"
+
+#: instances/models.py:24
+msgid "addresses"
+msgstr "adressen"
+
+#: instances/models.py:26
+msgid "first seen"
+msgstr "voor het eerst gezien"
+
+#: instances/models.py:27 instances/models.py:53
+msgid "last seen"
+msgstr "voor het laatst gezien"
+
+#: instances/models.py:29
+msgid "alive"
+msgstr "levend"
+
+#: instances/models.py:30
+msgid "parallel tasks limit"
+msgstr "parallelle taak limiet"
+
+#: instances/templates/searchable_osm.html:28
+msgid "Location not found"
+msgstr "Locatie niet gevonden"
+
+#: instances/templates/searchable_osm.html:51
+msgid "Search"
+msgstr "Zoek"
+
+#: instances/templates/searchable_osm.html:52
+msgid "Address"
+msgstr "Adres"
+
+#: measurements/apps.py:7
+msgid "Measurement data"
+msgstr "Meting-gegevens"
+
+#: measurements/models.py:11
+msgid "Critical"
+msgstr "Kritisch"
+
+#: measurements/models.py:12
+msgid "Error"
+msgstr "Fout"
+
+#: measurements/models.py:13
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#: measurements/models.py:14
+msgid "Info"
+msgstr "Info"
+
+#: measurements/models.py:15
+msgid "Debug"
+msgstr "Debug"
+
+#: measurements/models.py:20
+msgid "URL"
+msgstr "URL"
+
+#: measurements/models.py:22
+msgid "Callback URL"
+msgstr "Callback URL"
+
+#: measurements/models.py:23
+msgid "callback auth code"
+msgstr "callback auth code"
+
+#: measurements/models.py:25
+msgid "requested"
+msgstr "aangevraagd"
+
+#: measurements/models.py:26
+msgid "started"
+msgstr "gestart"
+
+#: measurements/models.py:27
+msgid "finished"
+msgstr "afgerond"
+
+#: measurements/models.py:29
+msgid "DNS results"
+msgstr "DNS resultaten"
+
+#: measurements/models.py:32 measurements/models.py:49
+msgid "instance run"
+msgstr "instantie-run"
+
+#: measurements/models.py:33
+msgid "instance runs"
+msgstr "instantie-runs"
+
+#: measurements/models.py:38
+#, python-brace-format
+msgid "{url} completed on {when}"
+msgstr "{url} afgerond op {when}"
+
+#: measurements/models.py:41
+#, python-brace-format
+msgid "{url} started on {when}"
+msgstr "{url} gestart op {when}"
+
+#: measurements/models.py:44
+#, python-brace-format
+msgid "{url} requested on {when}"
+msgstr "{url} aangevraagd op {when}"
+
+#: measurements/models.py:51
+msgid "Marvin"
+msgstr "Marvin"
+
+#: measurements/models.py:57
+msgid "instance run result"
+msgstr "instantie-run resultaat"
+
+#: measurements/models.py:58
+msgid "instance run results"
+msgstr "instantie-run resultaten"
+
+#: measurements/models.py:61
+#, python-brace-format
+msgid "{obj.instancerun} on {obj.marvin}"
+msgstr "{obj.instancerun} op {obj.marvin}"
+
 #: templates/admin/base_site.html:5
 msgid "NAT64Check Trillian admin"
 msgstr "NAT64Check Trillian beheer"
@@ -25,278 +197,18 @@ msgstr "NAT64Check Trillian beheer"
 msgid "Trillian administration"
 msgstr "Trillian beheer"
 
-#~ msgid "country"
-#~ msgstr "land"
-
-#~ msgid "admin"
-#~ msgstr "beheerder"
-
-#~ msgid "version"
-#~ msgstr "versie"
-
-#~ msgid "Test-cluster instances"
-#~ msgstr "Test-cluster instanties"
-
-#~ msgid "name"
-#~ msgstr "naam"
-
-#~ msgid "hostname"
-#~ msgstr "hostnaam"
-
-#~ msgid "Please provide a valid host name"
-#~ msgstr "Geef alstublient een geldige hostnaam op"
-
-#~ msgid "is active"
-#~ msgstr "is actief"
-
-#~ msgid "location"
-#~ msgstr "lokatie"
-
-#~ msgid "Trillian"
-#~ msgstr "Trillian"
-
-#~ msgid "type"
-#~ msgstr "type"
-
-#~ msgid "browser name"
-#~ msgstr "browsernaam"
-
-#~ msgid "browser version"
-#~ msgstr "browserversie"
-
-#~ msgid "instance type"
-#~ msgstr "instantie-type"
-
-#~ msgid "IPv4-only"
-#~ msgstr "IPv4-only"
-
-#~ msgid "IPv6-only"
-#~ msgstr "IPv6-only"
-
-#~ msgid "Dual-Stack"
-#~ msgstr "Dual-Stack"
-
-#~ msgid "IPv6 with NAT64"
-#~ msgstr "IPv6 met NAT64"
-
-#~ msgid "addresses"
-#~ msgstr "adressen"
-
-#~ msgid "{trillian}: {name}"
-#~ msgstr "{trillian}: {name}"
-
-#~ msgid "Location not found"
-#~ msgstr "Lokatie niet gevonden"
-
-#~ msgid "Search"
-#~ msgstr "Zoek"
-
-#~ msgid "Address"
-#~ msgstr "Adres"
-
-#~ msgid "Trillians"
-#~ msgstr "Trillians"
-
-#~ msgid "Measurement data"
-#~ msgstr "Meting-gegevens"
-
-#~ msgid "Critical"
-#~ msgstr "Kritisch"
-
-#~ msgid "Error"
-#~ msgstr "Fout"
-
-#~ msgid "Warning"
-#~ msgstr "Waarschuwing"
-
-#~ msgid "Info"
-#~ msgstr "Info"
-
-#~ msgid "Debug"
-#~ msgstr "Debug"
-
-#~ msgid "owner"
-#~ msgstr "eigenaar"
-
-#~ msgid "Name your test schedule, must be unique"
-#~ msgstr "Geef uw testschema een naam, moet uniek zijn"
-
-#~ msgid "URL"
-#~ msgstr "URL"
-
-#~ msgid "The URL you want to test"
-#~ msgstr "De URL die u wilt testen"
-
-#~ msgid "The data centres from where you want this URL to be tested"
-#~ msgstr "De datacenters vanaf waar u deze URL wilt testen"
-
-#~ msgid "time"
-#~ msgstr "tijd"
-
-#~ msgid "The time of day in UTC when you want the tests to be scheduled"
-#~ msgstr "De tijd van de dag in UTC waarop u deze tests wilt inplannen"
-
-#~ msgid "start"
-#~ msgstr "start"
-
-#~ msgid "The first day that you want the tests to be run"
-#~ msgstr "De eerste dag dat u deze tests wilt uitvoeren"
-
-#~ msgid "end"
-#~ msgstr "einde"
-
-#~ msgid "The last day that you want the tests to be run"
-#~ msgstr "De laatste dag dat u deze tests wilt uitvoeren"
-
-#~ msgid "frequency"
-#~ msgstr "frequentie"
-
-#~ msgid "Every day"
-#~ msgstr "Elke dag"
-
-#~ msgid "Every week"
-#~ msgstr "Elke week"
-
-#~ msgid "Every month"
-#~ msgstr "Elke maand"
-
-#~ msgid "Frequency to schedule the tests. Can be \"D\" (daily), \"W\" (weekly) or \"M\" (monthly)"
-#~ msgstr "Frequentie waarmee u deze tests wilt inplannen. Kan \"D\" (dagelijks), \"W\" (wekelijks) of \"M\" (maandelijks) zijn"
-
-#~ msgid "is public"
-#~ msgstr "is publiek"
-
-#~ msgid "Whether the test results should be publicly visible"
-#~ msgstr "Of de testresultaten publiekelijk toegankelijk zullen zijn"
-
-#~ msgid "schedule"
-#~ msgstr "schema"
-
-#~ msgid "schedules"
-#~ msgstr "schema's"
-
-#~ msgid "requested"
-#~ msgstr "aangevraagd"
-
-#~ msgid "started"
-#~ msgstr "gestart"
-
-#~ msgid "finished"
-#~ msgstr "afgerond"
-
-#~ msgid "image score"
-#~ msgstr "score voor afbeelding"
-
-#~ msgid "image feedback"
-#~ msgstr "feedback voor afbeelding"
-
-#~ msgid "resource score"
-#~ msgstr "score voor bronnen"
-
-#~ msgid "resource feedback"
-#~ msgstr "feedback voor bronnen"
-
-#~ msgid "overall score"
-#~ msgstr "score voor geheel"
-
-#~ msgid "overall feedback"
-#~ msgstr "feedback voor geheel"
-
-#~ msgid "test run"
-#~ msgstr "test-run"
-
-#~ msgid "test runs"
-#~ msgstr "test-runs"
-
-#~ msgid "{url} completed on {when}"
-#~ msgstr "{url} afgerond op {when}"
-
-#~ msgid "{url} started on {when}"
-#~ msgstr "{url} gestart op {when}"
-
-#~ msgid "{url} requested on {when}"
-#~ msgstr "{url} aangevraagd op {when}"
-
-#~ msgid "severity"
-#~ msgstr "ernstigheid"
-
-#~ msgid "message"
-#~ msgstr "bericht"
-
-#~ msgid "test run message"
-#~ msgstr "test-run bericht"
-
-#~ msgid "test run messages"
-#~ msgstr "test-run berichten"
-
-#~ msgid "ID on Trillian"
-#~ msgstr "ID op Trillian"
-
-#~ msgid "callback auth code"
-#~ msgstr "callback auth code"
-
-#~ msgid "DNS results"
-#~ msgstr "DNS resultaten"
-
-#~ msgid "instance run"
-#~ msgstr "instantie-run"
-
-#~ msgid "instance runs"
-#~ msgstr "instantie-runs"
-
-#~ msgid "{obj.testrun} on {obj.trillian}"
-#~ msgstr "{obj.testrun} op {obj.trillian}"
-
-#~ msgid "instance run message"
-#~ msgstr "instantie-run bericht"
-
-#~ msgid "instance run messages"
-#~ msgstr "instantie-run berichten"
-
-#~ msgid "Marvin"
-#~ msgstr "Marvin"
-
-#~ msgid "instance run result"
-#~ msgstr "instantie-run resultaat"
-
-#~ msgid "instance run results"
-#~ msgstr "instantie-run resultaten"
-
-#~ msgid "{obj.instancerun} on {obj.marvin}"
-#~ msgstr "{obj.instancerun} op {obj.marvin}"
-
-#~ msgid "Django site admin"
-#~ msgstr "Django site beheer"
-
-#~ msgid "countries"
-#~ msgstr "landen"
-
-#~ msgid "World regions and statistics"
-#~ msgstr "Wereldregio's en statistieken"
-
-#~ msgid "code"
-#~ msgstr "code"
-
-#~ msgid "parent"
-#~ msgstr "bovenliggend"
-
-#~ msgid "level"
-#~ msgstr "niveau"
-
-#~ msgid "region"
-#~ msgstr "regio"
-
-#~ msgid "regions"
-#~ msgstr "regio's"
-
-#~ msgid "The new password for this user"
-#~ msgstr "Het nieuwe wachtwoord voor deze gebruiker"
-
-#~ msgid "English"
-#~ msgstr "Engels"
-
-#~ msgid "Dutch"
-#~ msgstr "Nederlands"
-
-#~ msgid "Slovenian"
-#~ msgstr "Sloveens"
+#: trillian_be/api/views.py:13
+msgid "The new password for this user"
+msgstr "Het nieuwe wachtwoord voor deze gebruiker"
+
+#: trillian_be/settings.py:135
+msgid "English"
+msgstr "Engels"
+
+#: trillian_be/settings.py:136
+msgid "Dutch"
+msgstr "Nederlands"
+
+#: trillian_be/settings.py:137
+msgid "Slovenian"
+msgstr "Sloveens"

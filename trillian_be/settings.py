@@ -45,6 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
 
+    'instances',
+    'measurements',
+
+    'prettyjson',
     'django_countries',
     'django_filters',
     'rest_framework',
@@ -78,6 +82,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'trillian_be.context_processors.app_version'
             ],
         },
     },
@@ -90,11 +95,18 @@ WSGI_APPLICATION = 'trillian_be.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'HOST': 'db',
-        'NAME': 'trillian',
-        'USER': 'postgres',
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
+        'HOST': os.environ.get('PGHOST', ''),
+        'NAME': os.environ.get('PGDATABASE', 'trillian'),
+        'USER': os.environ.get('PGUSER', 'trillian'),
+        'PASSWORD': os.environ.get('PGPASSWORD', ''),
         'CONN_MAX_AGE': 900,
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'memcached:11211',
     }
 }
 

@@ -70,9 +70,9 @@ class UserViewSet(viewsets.ModelViewSet):
             return user_model.objects.filter(is_active=True)
 
     # noinspection PyUnusedLocal
-    @decorators.detail_route(methods=['post'],
-                             permission_classes=[permissions.IsAdminUser],
-                             get_serializer_class=lambda: PasswordSerializer)
+    @decorators.action(detail=True, methods=['post'],
+                       permission_classes=[permissions.IsAdminUser],
+                       get_serializer_class=lambda: PasswordSerializer)
     def set_password(self, request, pk=None):
         user = self.get_object()
         serializer = PasswordSerializer(data=request.data)
