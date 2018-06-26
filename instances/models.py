@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.contrib.postgres.fields import ArrayField
+from django.core.cache import cache
 from django.core.validators import RegexValidator, URLValidator
 from django.utils.translation import gettext_lazy as _
 
@@ -36,6 +37,28 @@ class Marvin(models.Model):
         return '{name} ({type}: {alive})'.format(name=self.name,
                                                  type=self.instance_type,
                                                  alive=self.alive and _('alive') or _('dead'))
+
+    @property
+    def cache_key(self):
+        return 'marvin_{}'.format(self.name)
+
+    @property
+    def tasks(self):
+        return cache.get(self.cache_key, 0)
+
+    @tasks.setter
+    def tasks(self, value):
+        cache.set(self.cache_key, value)
+
+    def __enter__(self):
+        key = self.cache_key
+        cache.add(key, 0)
+        cache.incr(key)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        key = self.cache_key
+        cache.add(key, 1)
+        cache.decr(key)
 
     def display_version(self):
         return '.'.join(map(str, self.version))

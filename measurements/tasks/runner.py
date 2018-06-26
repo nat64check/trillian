@@ -2,10 +2,10 @@ import socket
 import sys
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import ExitStack
 from random import randrange
 from urllib.parse import urlparse
 
-from django.core.cache import cache
 from django.db import transaction
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
@@ -20,9 +20,7 @@ def get_eligible_marvins():
     marvins = Marvin.objects.filter(alive=True)
     possible_marvins = []
     for marvin in marvins:
-        marvin_key = 'marvin_{}'.format(marvin.name)
-        cache.add(marvin_key, 0)
-        tasks = cache.incr(marvin_key)
+        tasks = marvin.tasks
         if tasks < marvin.parallel_tasks_limit:
             possible_marvins.append((tasks, marvin))
 
@@ -107,43 +105,48 @@ def execute_instancerun(pk):
         marvins = get_marvins(instance_types)
 
         with FuturesSession(executor=ThreadPoolExecutor(max_workers=len(marvins))) as session:
-            # Start requests
-            browse_requests = {}
-            for instance_type, marvin in marvins.items():
-                browse_requests[instance_type] = session.request(
-                    method='POST',
-                    url='http://{}:3001/browse'.format(marvin.name),
-                    json={
-                        'url': run.url,
-                    },
-                    timeout=(5, 65)
-                )
+            with ExitStack() as stack:
+                # Signal usage of Marvins
+                for marvin in marvins.values():
+                    stack.enter_context(marvin)
 
-            ping_requests = {}
-            for instance_type, marvin in marvins.items():
-                family = 4 if instance_type == 'v4only' else 6
-                ping_requests[instance_type] = session.request(
-                    method='POST',
-                    url='http://{}:3001/ping{}'.format(marvin.name, family),
-                    json={
-                        'target': urlparse(run.url).hostname,
-                    },
-                    timeout=(5, 65)
-                )
+                # Start requests
+                browse_requests = {}
+                for instance_type, marvin in marvins.items():
+                    browse_requests[instance_type] = session.request(
+                        method='POST',
+                        url='http://{}:3001/browse'.format(marvin.name),
+                        json={
+                            'url': run.url,
+                        },
+                        timeout=(5, 65)
+                    )
 
-            # Wait for all the responses to come back in
-            browse_responses = {}
-            for instance_type, request in browse_requests.items():
-                browse_responses[instance_type] = request.result()
+                ping_requests = {}
+                for instance_type, marvin in marvins.items():
+                    family = 4 if instance_type == 'v4only' else 6
+                    ping_requests[instance_type] = session.request(
+                        method='POST',
+                        url='http://{}:3001/ping{}'.format(marvin.name, family),
+                        json={
+                            'target': urlparse(run.url).hostname,
+                        },
+                        timeout=(5, 65)
+                    )
 
-            ping_responses = {}
-            for instance_type, request in ping_requests.items():
-                ping_responses[instance_type] = request.result()
+                # Wait for all the responses to come back in
+                browse_responses = {}
+                for instance_type, request in browse_requests.items():
+                    browse_responses[instance_type] = request.result()
+
+                ping_responses = {}
+                for instance_type, request in ping_requests.items():
+                    ping_responses[instance_type] = request.result()
 
             # Check if all tests succeeded
             if not all([response.status_code == 200
                         for response in list(browse_responses.values()) + list(ping_responses.values())]):
-                timeout = randrange(5, 60)
+                timeout = randrange(5, 120)
                 print_error("Not all tests completed successfully, retrying in {timeout} seconds".format(
                     timeout=timeout
                 ))
