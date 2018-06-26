@@ -1,4 +1,4 @@
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 from uwsgi_tasks import set_uwsgi_callbacks
 
