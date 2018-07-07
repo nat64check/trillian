@@ -6,7 +6,14 @@ from django.core.validators import RegexValidator, URLValidator
 from django.utils.translation import gettext_lazy as _
 
 
+class MarvinManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+
 class Marvin(models.Model):
+    objects = MarvinManager()
+
     name = models.CharField(_('name'), max_length=100, unique=True)
     hostname = models.CharField(_('hostname'), max_length=127, validators=[
         RegexValidator(URLValidator.host_re, message=_("Please provide a valid host name"))
@@ -34,9 +41,12 @@ class Marvin(models.Model):
         ordering = ('-alive', 'instance_type', '-last_seen')
 
     def __str__(self):
-        return '{name} ({type}: {alive})'.format(name=self.name,
-                                                 type=self.instance_type,
-                                                 alive=self.alive and _('alive') or _('dead'))
+        return _('{name} ({type}: {alive})').format(name=self.name,
+                                                    type=self.instance_type,
+                                                    alive=self.alive and _('alive') or _('dead'))
+
+    def natural_key(self):
+        return self.name
 
     @property
     def cache_key(self):
