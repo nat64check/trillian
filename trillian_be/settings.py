@@ -201,6 +201,12 @@ SECURE_BROWSER_XSS_FILTER = True
 # Refuse to be framed
 X_FRAME_OPTIONS = 'DENY'
 
+try:
+    # Override default setting with local settings
+    from .local_settings import *
+except ImportError:
+    pass
+
 if DEBUG:
     INSTALLED_APPS += [
         'django_extensions',
