@@ -1,9 +1,10 @@
 import socket
 
 import requests
+from django.core.cache import cache
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from django.core.cache import cache
+from django.utils.translation import gettext_lazy as _
 
 from instances.models import Marvin
 
@@ -57,9 +58,9 @@ class Command(BaseCommand):
                         'Existing Marvin {marvin.name} ({marvin.instance_type}) updated'.format(marvin=marvin)
                     )
             except requests.exceptions.RequestException:
-                self.stderr.write('Unable to connect to {sockaddr}'.format(sockaddr=sockaddr))
+                self.stderr.write(_('Unable to connect to {address}').format(address=sockaddr))
             except (KeyError, ValueError):
-                self.stderr.write('Marvin {sockaddr} returned invalid JSON'.format(sockaddr=sockaddr))
+                self.stderr.write(_('Marvin {address} returned invalid JSON').format(address=sockaddr))
 
         # Mark other Marvins as dead
         for marvin in Marvin.objects.filter(alive=True).exclude(name__in=marvins):
@@ -67,5 +68,5 @@ class Command(BaseCommand):
             marvin.save()
 
             self.stderr.write(self.style.WARNING(
-                'Marvin {marvin.name} ({marvin.instance_type}) has gone'.format(marvin=marvin)
+                _('Marvin {marvin.name} ({marvin.instance_type}) has gone').format(marvin=marvin)
             ))

@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 from django.db import transaction
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from requests_futures.sessions import FuturesSession
 from uwsgi_tasks import RetryTaskException, get_current_task, task
 
@@ -56,7 +57,7 @@ def get_marvins(instance_types):
     marvins = find_marvins(instance_types)
     if not all(marvins.values()):
         timeout = randrange(5, 60)
-        print_error("Not enough Marvins available, missing {types}: delaying by {timeout} seconds".format(
+        print_error(_("Not enough Marvins available, missing {types}: delaying by {timeout} seconds").format(
             types=[instance_type for instance_type, marvin in marvins.items() if marvin is None],
             timeout=timeout
         ))
@@ -64,8 +65,8 @@ def get_marvins(instance_types):
         current_task = get_current_task()
         raise RetryTaskException(count=current_task.setup['retry_count'], timeout=timeout)
 
-    print_message("Found Marvins: {}".format(', '.join(['{}: {}'.format(instance_type, marvin.name)
-                                                        for instance_type, marvin in marvins.items()])))
+    print_message(_("Found Marvins: {}").format(', '.join(['{}: {}'.format(instance_type, marvin.name)
+                                                           for instance_type, marvin in marvins.items()])))
 
     return marvins
 
@@ -79,12 +80,12 @@ def execute_instancerun(pk):
         with transaction.atomic():
             run = InstanceRun.objects.select_for_update().get(pk=pk)
             if run.started:
-                print_notice('InstanceRun {} has already started, skipping'.format(pk))
+                print_notice(_('InstanceRun {pk} has already started, skipping').format(pk=pk))
                 return
 
             now = timezone.now()
             if run.requested > now:
-                print_notice('InstanceRun {} is requested to start in the future, skipping'.format(pk))
+                print_notice(_('InstanceRun {pk} is requested to start in the future, skipping').format(pk=pk))
                 return
 
             # We are starting!
@@ -100,7 +101,7 @@ def execute_instancerun(pk):
         run.dns_results = addresses
 
         # Log which instancerun we're working on
-        print_message("Start working on InstanceRun {run.pk} ({run.url})".format(run=run))
+        print_message(_("Start working on InstanceRun {run.pk} ({run.url})").format(run=run))
         instance_types = ['v4only', 'v6only', 'nat64']
         marvins = get_marvins(instance_types)
 
@@ -147,7 +148,7 @@ def execute_instancerun(pk):
             if not all([response.status_code == 200
                         for response in list(browse_responses.values()) + list(ping_responses.values())]):
                 timeout = randrange(5, 120)
-                print_error("Not all tests completed successfully, retrying in {timeout} seconds".format(
+                print_error(_("Not all tests completed successfully, retrying in {timeout} seconds").format(
                     timeout=timeout
                 ))
                 raise RetryTaskException(timeout=timeout)
@@ -166,7 +167,7 @@ def execute_instancerun(pk):
         run.finished = timezone.now()
         run.save()
 
-        print_message("Work on InstanceRun {run.pk} ({run.url}) completed".format(run=run))
+        print_message(_("Work on InstanceRun {run.pk} ({run.url}) completed").format(run=run))
 
     except RetryTaskException:
         # Clear the started timestamp so it can be retried, and trigger retry
@@ -174,13 +175,13 @@ def execute_instancerun(pk):
         raise
 
     except InstanceRun.DoesNotExist:
-        print_warning("InstanceRun {} does not exist anymore".format(pk))
+        print_warning(_("InstanceRun {pk} does not exist anymore").format(pk=pk))
         return
 
     except Exception as ex:
-        print_error('{name} on line {line}: {msg}'.format(name=type(ex).__name__,
-                                                          line=sys.exc_info()[-1].tb_lineno,
-                                                          msg=ex))
+        print_error(_('{name} on line {line}: {msg}').format(name=type(ex).__name__,
+                                                             line=sys.exc_info()[-1].tb_lineno,
+                                                             msg=ex))
 
         # Clear the started timestamp so it can be retried, and trigger retry
         InstanceRun.objects.filter(pk=pk).update(started=None, finished=None)
