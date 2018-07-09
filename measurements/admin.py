@@ -15,8 +15,8 @@ from measurements.models import InstanceRun, InstanceRunResult
 
 class InlineInstanceRunResult(admin.TabularInline):
     model = InstanceRunResult
-    fields = ('marvin', 'when', 'nice_pings', 'nice_web_response', 'data_image')
-    readonly_fields = ('marvin', 'when', 'nice_pings', 'nice_web_response', 'data_image')
+    fields = ('marvin', 'when', 'nice_ping_response', 'nice_web_response', 'data_image')
+    readonly_fields = ('marvin', 'when', 'nice_ping_response', 'nice_web_response', 'data_image')
     extra = 0
     can_delete = False
     show_change_link = True
@@ -28,9 +28,9 @@ class InlineInstanceRunResult(admin.TabularInline):
     def has_add_permission(self, request):
         return False
 
-    def nice_pings(self, instance):
+    def nice_ping_response(self, instance):
         # Convert the data to sorted, indented JSON
-        response = json.dumps(instance.pings, indent=2)
+        response = json.dumps(instance.ping_response, indent=2)
         formatter = HtmlFormatter(style='colorful')
         response = highlight(response, JsonLexer(), formatter)
         style = "<style>" + formatter.get_style_defs() + "</style><br>"
@@ -38,7 +38,7 @@ class InlineInstanceRunResult(admin.TabularInline):
         # Safe the output
         return mark_safe(style + response)
 
-    nice_pings.short_description = _('pings')
+    nice_ping_response.short_description = _('ping response')
 
     def nice_web_response(self, instance):
         # Convert the data to sorted, indented JSON

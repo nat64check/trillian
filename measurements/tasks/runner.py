@@ -156,7 +156,7 @@ def execute_instancerun(pk):
             for instance_type in instance_types:
                 InstanceRunResult.objects.update_or_create(
                     defaults={
-                        'pings': ping_responses[instance_type].json(object_pairs_hook=OrderedDict),
+                        'ping_response': ping_responses[instance_type].json(object_pairs_hook=OrderedDict),
                         'web_response': browse_responses[instance_type].json(object_pairs_hook=OrderedDict),
                     },
                     instancerun=run,

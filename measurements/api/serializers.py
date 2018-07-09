@@ -7,15 +7,15 @@ class InstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = InstanceRunResult
         fields = ('id', 'instancerun', 'instancerun_id', 'marvin', 'marvin_id',
-                  'when', 'instance_type', 'pings', 'web_response', '_url')
-        read_only_fields = ('marvin', 'instance_type', 'pings', 'web_response')
+                  'when', 'instance_type', 'ping_response', 'web_response', '_url')
+        read_only_fields = ('marvin', 'instance_type', 'ping_response', 'web_response')
 
 
 class NestedInstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = InstanceRunResult
-        fields = ('id', 'marvin', 'marvin_id', 'when', 'instance_type', 'pings', 'web_response', '_url')
-        read_only_fields = ('marvin', 'instance_type', 'pings', 'web_response')
+        fields = ('id', 'marvin', 'marvin_id', 'when', 'instance_type', 'ping_response', 'web_response', '_url')
+        read_only_fields = ('marvin', 'instance_type', 'ping_response', 'web_response')
 
 
 class InstanceRunSerializer(serializers.HyperlinkedModelSerializer):

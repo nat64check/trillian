@@ -52,7 +52,7 @@ class InstanceRunResult(models.Model):
 
     when = models.DateTimeField(auto_now_add=True)
 
-    pings = JSONField()
+    ping_response = JSONField()
     web_response = JSONField()
 
     class Meta:
