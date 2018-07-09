@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     'prettyjson',
     'django_countries',
+    'django_extensions',
     'django_filters',
     'rest_framework',
     'rest_framework_filters',
@@ -209,7 +210,6 @@ except ImportError:
 
 if DEBUG:
     INSTALLED_APPS += [
-        'django_extensions',
         'debug_toolbar',
     ]
 
