@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
 
+    'generic',
     'instances',
     'measurements',
 
@@ -91,8 +92,8 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'generic.context_processors.uwsgi_context',
                 'trillian_be.context_processors.app_version',
-                'trillian_be.context_processors.uwsgi_context',
             ],
         },
     },

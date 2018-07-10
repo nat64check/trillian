@@ -1,8 +1,17 @@
 [
   {
+    "model": "auth.group",
+    "fields": {
+      "name": "Zaphods",
+      "permissions": [
+        ["add_instancerun", "measurements", "instancerun"]
+      ]
+    }
+  },
+  {
     "model": "auth.user",
     "fields": {
-      "password": "pbkdf2_sha256$100000$jDOlTnnjuhmf$MCT5THfjOecVGFYvWkSo1HSNTlfQwygvU0bAepdoHNs=",
+      "password": "pbkdf2_sha256$100000$qmfbpCb1qzyJ$we7V+1cBPeiwWNrGPCImQP1mKYP6OW4Oi18kymM/Y+E=",
       "last_login": "2017-11-07T10:18:31.131Z",
       "is_superuser": true,
       "username": "sander",
@@ -30,6 +39,25 @@
       "is_active": true,
       "date_joined": "2017-11-05T19:48:13Z",
       "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "fields": {
+      "password": "pbkdf2_sha256$100000$LdpMOXe9SZiK$3sH+wojZM19xTcTWnVFJTWlCVNWfj/irkiVznbx62Ng=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "zaphod",
+      "first_name": "Zaphod",
+      "last_name": "Beeblebrox",
+      "email": "zaphod@nat64check.org",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2018-07-10T17:06:52Z",
+      "groups": [
+        ["Zaphods"]
+      ],
       "user_permissions": []
     }
   }
