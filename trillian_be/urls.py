@@ -25,6 +25,7 @@ from rest_framework_swagger.views import get_swagger_view
 from instances.urls import instances_router
 from measurements.urls import measurements_router
 from trillian_be.api.views import UserViewSet
+from trillian_be.views import reload_uwsgi
 
 router = DefaultRouter()
 router.register('users', UserViewSet, base_name='user')
@@ -35,6 +36,7 @@ urlpatterns = [
     url(r'^swagger/$', get_swagger_view(title='NAT64Check Trillian API')),
     url(r'^docs/', include_docs_urls(title='NAT64Check Trillian API')),
 
+    url(r'^admin/reload/$', reload_uwsgi, name='reload_uwsgi'),
     url(r'^admin/', admin.site.urls),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
