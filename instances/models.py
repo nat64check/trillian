@@ -6,6 +6,30 @@ from django.core.validators import RegexValidator, URLValidator
 from django.utils.translation import gettext_lazy as _
 
 
+class ZaphodManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+
+class Zaphod(models.Model):
+    objects = ZaphodManager()
+
+    name = models.CharField(_('name'), max_length=100, unique=True)
+    hostname = models.CharField(_('hostname'), max_length=127, unique=True, validators=[
+        RegexValidator(URLValidator.host_re, message=_("Please provide a valid host name"))
+    ])
+    token = models.CharField(_("token"), max_length=40)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+    def natural_key(self):
+        return self.name,
+
+
 class MarvinManager(models.Manager):
     def get_by_natural_key(self, name):
         return self.get(name=name)
