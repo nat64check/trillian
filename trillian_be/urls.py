@@ -23,9 +23,9 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_swagger.views import get_swagger_view
 
 from generic.api.views import UserViewSet
+from generic.views import reload_uwsgi
 from instances.urls import instances_router
 from measurements.urls import measurements_router
-from generic.views import reload_uwsgi
 
 router = DefaultRouter()
 router.register('users', UserViewSet, base_name='user')
@@ -50,8 +50,10 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
     url(r'^api-auth/', include('rest_framework.urls')),
-    url(r'^api/$', RedirectView.as_view(url='v1')),
+    url(r'^api/$', RedirectView.as_view(url='v1/')),
     url(r'^api/v1/', include(router.urls)),
+
+    url(r'^$', RedirectView.as_view(url='api/')),
 ]
 
 if settings.DEBUG:
