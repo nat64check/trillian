@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 user_model = get_user_model()
@@ -16,3 +17,8 @@ class UserAdminSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'is_active', 'date_joined', 'last_login',
                   '_url')
+
+
+# noinspection PyAbstractClass
+class PasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(required=True, help_text=_('The new password for this user'))
