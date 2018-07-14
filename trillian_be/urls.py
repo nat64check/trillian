@@ -51,7 +51,7 @@ urlpatterns = [
 
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/$', RedirectView.as_view(url='v1/')),
-    url(r'^api/v1/', include(router.urls)),
+    url(r'^api/v1/', include((router.urls, 'api'), namespace='v1')),
 
     url(r'^$', RedirectView.as_view(url='api/')),
 ]
