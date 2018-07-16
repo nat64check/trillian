@@ -20,7 +20,6 @@ class InstanceRun(models.Model):
     url = models.URLField(_('URL'), db_index=True)
 
     callback_url = models.URLField(_('Callback URL'), blank=True)
-    callback_auth_code = models.CharField(_('callback auth code'), max_length=50, blank=True)
 
     requested = models.DateTimeField(_('requested'), db_index=True)
     started = models.DateTimeField(_('started'), blank=True, null=True, db_index=True)

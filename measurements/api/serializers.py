@@ -28,7 +28,7 @@ class InstanceRunSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = InstanceRun
         fields = ('id', 'url',
-                  'callback_url', 'callback_auth_code',
+                  'callback_url',
                   'requested', 'started', 'finished',
                   'dns_results',
                   'results',

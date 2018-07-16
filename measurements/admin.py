@@ -78,7 +78,7 @@ class InstanceRunAdmin(admin.ModelAdmin):
             'fields': ('url',),
         }),
         ('Callback', {
-            'fields': ('callback_url', 'callback_auth_code'),
+            'fields': ('callback_url',),
         }),
         ('Timing', {
             'fields': ('requested', 'started', 'finished'),
