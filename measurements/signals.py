@@ -16,7 +16,7 @@ def schedule_execution(instance: InstanceRun, **kwargs):
 
     # Schedule execution for the spooler
     execute_instancerun.setup['at'] = max(instance.requested,
-                                          timezone.now() + timedelta(seconds=5))
+                                          timezone.now() + timedelta(seconds=1))
     execute_instancerun(instance.pk)
 
 
@@ -24,4 +24,5 @@ def schedule_execution(instance: InstanceRun, **kwargs):
 @receiver(post_save, sender=InstanceRun, dispatch_uid='schedule_updater')
 def schedule_updater(instance: InstanceRun, **kwargs):
     # Schedule update in the spooler
+    execute_update_zaphod.setup['at'] = timezone.now() + timedelta(seconds=1)
     execute_update_zaphod(instance.pk)
