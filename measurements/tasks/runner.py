@@ -13,7 +13,7 @@ from requests_futures.sessions import FuturesSession
 from uwsgi_tasks import RetryTaskException, get_current_task, task
 
 from instances.models import Marvin
-from measurements.tasks.utils import print_error, print_message, print_notice, print_warning
+from .utils import print_error, print_message, print_notice, print_warning, retry_get
 
 
 def get_eligible_marvins():
@@ -78,7 +78,7 @@ def execute_instancerun(pk):
     try:
         # Make sure we need to start and we don't start twice
         with transaction.atomic():
-            run = InstanceRun.objects.select_for_update().get(pk=pk)
+            run = retry_get(InstanceRun.objects.select_for_update(), pk=pk)
             if run.started:
                 print_notice(_('InstanceRun {pk} has already started, skipping').format(pk=pk))
                 return

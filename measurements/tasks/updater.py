@@ -8,7 +8,7 @@ from uwsgi_tasks import RetryTaskException, task
 
 from instances.models import Zaphod
 from measurements.api.serializers import PlainInstanceRunSerializer
-from measurements.tasks.utils import print_error, print_message, print_warning
+from .utils import print_error, print_message, print_warning, retry_get
 
 
 class TokenAuth(AuthBase):
@@ -25,7 +25,7 @@ def execute_update_zaphod(pk):
     from measurements.models import InstanceRun
 
     try:
-        run = InstanceRun.objects.get(pk=pk)
+        run = retry_get(InstanceRun.objects.all(), pk=pk)
         if not run.callback_url:
             print_warning(_("No callback URL provided for InstanceRun {pk}").format(pk=pk))
 

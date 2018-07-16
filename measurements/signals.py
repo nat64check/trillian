@@ -1,8 +1,5 @@
-from datetime import timedelta
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils import timezone
 
 from measurements.models import InstanceRun
 from measurements.tasks import execute_instancerun, execute_update_zaphod
@@ -15,8 +12,7 @@ def schedule_execution(instance: InstanceRun, **kwargs):
         return
 
     # Schedule execution for the spooler
-    execute_instancerun.setup['at'] = max(instance.requested,
-                                          timezone.now() + timedelta(seconds=1))
+    execute_instancerun.setup['at'] = instance.requested
     execute_instancerun(instance.pk)
 
 
@@ -24,5 +20,4 @@ def schedule_execution(instance: InstanceRun, **kwargs):
 @receiver(post_save, sender=InstanceRun, dispatch_uid='schedule_updater')
 def schedule_updater(instance: InstanceRun, **kwargs):
     # Schedule update in the spooler
-    execute_update_zaphod.setup['at'] = timezone.now() + timedelta(seconds=1)
     execute_update_zaphod(instance.pk)
