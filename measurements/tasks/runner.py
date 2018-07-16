@@ -18,7 +18,7 @@ from measurements.tasks.utils import print_error, print_message, print_notice, p
 
 def get_eligible_marvins():
     # Find eligible Marvins
-    marvins = Marvin.objects.filter(alive=True)
+    marvins = Marvin.objects.filter(is_alive=True)
     possible_marvins = []
     for marvin in marvins:
         tasks = marvin.tasks

@@ -24,8 +24,8 @@ class VersionFilter(admin.SimpleListFilter):
 
 
 class AliveFilter(admin.SimpleListFilter):
-    title = _('alive')
-    parameter_name = 'alive'
+    title = _('is alive')
+    parameter_name = 'is_alive'
 
     def lookups(self, request, model_admin):
         return (
@@ -35,21 +35,21 @@ class AliveFilter(admin.SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        alive = self.value() or ''
-        if alive == 'all':
+        is_alive = self.value() or ''
+        if is_alive == 'all':
             return queryset
-        elif alive == 'no':
-            return queryset.filter(alive=False)
+        elif is_alive == 'no':
+            return queryset.filter(is_alive=False)
         else:
-            return queryset.filter(alive=True)
+            return queryset.filter(is_alive=True)
 
     def choices(self, cl):
-        alive = self.value() or ''
+        is_alive = self.value() or ''
 
         for lookup, title in self.lookup_choices:
             if lookup:
                 yield {
-                    'selected': alive == force_text(lookup),
+                    'selected': is_alive == force_text(lookup),
                     'query_string': cl.get_query_string({
                         self.parameter_name: lookup,
                     }, []),
@@ -57,7 +57,7 @@ class AliveFilter(admin.SimpleListFilter):
                 }
             else:
                 yield {
-                    'selected': alive == force_text(lookup),
+                    'selected': is_alive == force_text(lookup),
                     'query_string': cl.get_query_string({}, [self.parameter_name]),
                     'display': title,
                 }

@@ -7,7 +7,7 @@ from instances.models import Marvin, Zaphod
 @admin.register(Marvin)
 class MarvinAdmin(admin.ModelAdmin):
     list_display = ('instance_type', 'name', 'type', 'display_version', 'parallel_tasks_limit',
-                    'last_seen_display', 'alive')
+                    'last_seen_display', 'is_alive')
     list_filter = (AliveFilter, 'instance_type', 'type', VersionFilter)
     search_fields = ('name', 'hostname')
 

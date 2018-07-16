@@ -41,7 +41,7 @@ class Command(BaseCommand):
                     'addresses': response['network']['ipv4']['addresses'] + response['network']['ipv6']['addresses'],
                     'parallel_tasks_limit': response['limits']['parallel_tasks'],
                     'last_seen': timezone.now(),
-                    'alive': True,
+                    'is_alive': True,
                 }, name=name)
 
                 marvin_key = 'marvin_{}'.format(marvin.name)
@@ -63,8 +63,8 @@ class Command(BaseCommand):
                 self.stderr.write(_('Marvin {address} returned invalid JSON').format(address=sockaddr))
 
         # Mark other Marvins as dead
-        for marvin in Marvin.objects.filter(alive=True).exclude(name__in=marvins):
-            marvin.alive = False
+        for marvin in Marvin.objects.filter(is_alive=True).exclude(name__in=marvins):
+            marvin.is_alive = False
             marvin.save()
 
             self.stderr.write(self.style.WARNING(

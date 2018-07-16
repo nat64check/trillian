@@ -58,16 +58,16 @@ class Marvin(models.Model):
     first_seen = models.DateTimeField(_('first seen'), auto_now_add=True)
     last_seen = models.DateTimeField(_('last seen'))
 
-    alive = models.BooleanField(_('alive'), default=True)
+    is_alive = models.BooleanField(_('is alive'), default=True)
     parallel_tasks_limit = models.PositiveIntegerField(_('parallel tasks limit'))
 
     class Meta:
-        ordering = ('-alive', 'instance_type', '-last_seen')
+        ordering = ('-is_alive', 'instance_type', '-last_seen')
 
     def __str__(self):
-        return _('{name} ({type}: {alive})').format(name=self.name,
+        return _('{name} ({type}: {is_alive})').format(name=self.name,
                                                     type=self.instance_type,
-                                                    alive=self.alive and _('alive') or _('dead'))
+                                                    is_alive=self.is_alive and _('alive') or _('dead'))
 
     def natural_key(self):
         return self.name
