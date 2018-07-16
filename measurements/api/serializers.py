@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from instances.api.serializers import MarvinSerializer
+from instances.api.serializers import PlainMarvinSerializer
 from measurements.models import InstanceRun, InstanceRunResult
 
 
 class InstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
-    marvin = MarvinSerializer(read_only=True)
+    marvin = PlainMarvinSerializer(read_only=True)
 
     class Meta:
         model = InstanceRunResult
@@ -13,24 +13,28 @@ class InstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('marvin', 'instance_type', 'ping_response', 'web_response')
 
 
-class NestedInstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
-    marvin = MarvinSerializer(read_only=True)
+class PlainInstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
+    marvin = PlainMarvinSerializer(read_only=True)
 
     class Meta:
         model = InstanceRunResult
-        fields = ('id', 'marvin', 'when', 'ping_response', 'web_response', '_url')
+        fields = ('marvin', 'when', 'ping_response', 'web_response')
         read_only_fields = ('marvin', 'instance_type', 'ping_response', 'web_response')
 
 
-class InstanceRunSerializer(serializers.HyperlinkedModelSerializer):
-    results = NestedInstanceRunResultsSerializer(many=True, read_only=True)
+class PlainInstanceRunSerializer(serializers.HyperlinkedModelSerializer):
+    results = PlainInstanceRunResultsSerializer(many=True, read_only=True)
 
     class Meta:
         model = InstanceRun
-        fields = ('id', 'url',
+        fields = ('url',
                   'callback_url',
                   'requested', 'started', 'finished',
                   'dns_results',
-                  'results',
-                  '_url')
+                  'results')
         read_only_fields = ('started', 'finished', 'dns_results')
+
+
+class InstanceRunSerializer(PlainInstanceRunSerializer):
+    class Meta(PlainInstanceRunSerializer.Meta):
+        fields = ('id',) + PlainInstanceRunSerializer.Meta.fields + ('_url',)
