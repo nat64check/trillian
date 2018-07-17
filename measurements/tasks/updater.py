@@ -28,6 +28,7 @@ def execute_update_zaphod(pk):
         run = retry_get(InstanceRun.objects.all(), pk=pk)
         if not run.callback_url:
             print_warning(_("No callback URL provided for InstanceRun {pk}").format(pk=pk))
+            return
 
         print_message(_("Updating InstanceRun {run.pk} ({run.url}) on {run.callback_url}").format(run=run))
 
