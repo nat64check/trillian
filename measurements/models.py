@@ -44,6 +44,21 @@ class InstanceRun(models.Model):
                                                          when=date_format(self.requested, 'DATETIME_FORMAT'))
 
 
+class InstanceRunMessage(models.Model):
+    instancerun = models.ForeignKey(InstanceRun, verbose_name=_('instance run'), related_name='messages',
+                                    on_delete=models.CASCADE)
+    severity = models.PositiveSmallIntegerField(_('severity'), choices=severities)
+    message = models.CharField(_('message'), max_length=200)
+
+    class Meta:
+        verbose_name = _('instance run message')
+        verbose_name_plural = _('instance run messages')
+        ordering = ('instancerun', '-severity')
+
+    def __str__(self):
+        return '{obj.instancerun}: {obj.message} [{obj.severity}]'.format(obj=self)
+
+
 class InstanceRunResult(models.Model):
     instancerun = models.ForeignKey(InstanceRun, verbose_name=_('instance run'), related_name='results',
                                     on_delete=models.CASCADE)
