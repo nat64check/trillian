@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from instances.api.serializers import PlainMarvinSerializer
-from measurements.models import InstanceRun, InstanceRunResult
+from measurements.models import InstanceRun, InstanceRunMessage, InstanceRunResult
 
 
 class InstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,11 +19,17 @@ class PlainInstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = InstanceRunResult
         fields = ('marvin', 'when', 'ping_response', 'web_response')
-        read_only_fields = ('marvin', 'instance_type', 'ping_response', 'web_response')
+
+
+class PlainInstanceRunMessageSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = InstanceRunMessage
+        fields = ('severity', 'message')
 
 
 class PlainInstanceRunSerializer(serializers.HyperlinkedModelSerializer):
     results = PlainInstanceRunResultsSerializer(many=True, read_only=True)
+    messages = PlainInstanceRunMessageSerializer(many=True, read_only=True)
 
     class Meta:
         model = InstanceRun
@@ -31,7 +37,7 @@ class PlainInstanceRunSerializer(serializers.HyperlinkedModelSerializer):
                   'callback_url',
                   'requested', 'started', 'finished',
                   'dns_results',
-                  'results')
+                  'results', 'messages')
         read_only_fields = ('started', 'finished', 'dns_results')
 
 

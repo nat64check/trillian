@@ -10,7 +10,11 @@ from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers.data import JsonLexer
 
-from measurements.models import InstanceRun, InstanceRunResult
+from measurements.models import InstanceRun, InstanceRunMessage, InstanceRunResult
+
+
+class InstanceRunMessageAdmin(admin.TabularInline):
+    model = InstanceRunMessage
 
 
 class InlineInstanceRunResult(admin.TabularInline):
@@ -87,7 +91,7 @@ class InstanceRunAdmin(admin.ModelAdmin):
             'fields': ('nice_dns_results',),
         }),
     )
-    inlines = [InlineInstanceRunResult]
+    inlines = [InstanceRunMessageAdmin, InlineInstanceRunResult]
     readonly_fields = ('nice_dns_results',)
     search_fields = ('url',)
 

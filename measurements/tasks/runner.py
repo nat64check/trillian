@@ -1,3 +1,6 @@
+import base64
+import io
+import logging
 import socket
 import sys
 from collections import OrderedDict
@@ -6,14 +9,29 @@ from contextlib import ExitStack
 from random import randrange
 from urllib.parse import urlparse
 
+import requests
+import skimage.io
 from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from requests_futures.sessions import FuturesSession
+from skimage.measure import compare_ssim
 from uwsgi_tasks import RetryTaskException, get_current_task, task
 
 from instances.models import Marvin
+from measurements.models import InstanceRunMessage
 from .utils import print_error, print_message, print_notice, print_warning, retry_get
+
+
+# noinspection PyTypeChecker
+def compare_base64_images(img1_b64, img2_b64):
+    img1_bytes = base64.decodebytes(img1_b64.encode('ascii'))
+    img1 = skimage.io.imread(io.BytesIO(img1_bytes))
+
+    img2_bytes = base64.decodebytes(img2_b64.encode('ascii'))
+    img2 = skimage.io.imread(io.BytesIO(img2_bytes))
+
+    return compare_ssim(img1, img2, multichannel=True)
 
 
 def get_eligible_marvins():
@@ -102,7 +120,28 @@ def execute_instancerun(pk):
 
         # Log which instancerun we're working on
         print_message(_("Start working on InstanceRun {run.pk} ({run.url})").format(run=run))
-        instance_types = ['v4only', 'v6only', 'nat64']
+
+        # First determine a baseline
+        marvin = get_marvins(['dual-stack'])['dual-stack']
+        with marvin:
+            response = requests.request(
+                method='POST',
+                url='http://{}:3001/browse'.format(marvin.name),
+                json={
+                    'url': run.url,
+                },
+                timeout=(5, 65)
+            )
+            if response.status_code != 200:
+                timeout = randrange(5, 120)
+                print_error(_("Baseline test failed, retrying in {timeout} seconds").format(
+                    timeout=timeout
+                ))
+                raise RetryTaskException(timeout=timeout)
+
+            baseline = response.json()
+
+        instance_types = ['v4only', 'v6only', 'nat64', 'dual-stack']
         marvins = get_marvins(instance_types)
 
         with FuturesSession(executor=ThreadPoolExecutor(max_workers=len(marvins))) as session:
@@ -153,11 +192,26 @@ def execute_instancerun(pk):
                 ))
                 raise RetryTaskException(timeout=timeout)
 
+            # Parse all JSON
+            ping_responses = {instance_type: response.json(object_pairs_hook=OrderedDict)
+                              for instance_type, response in ping_responses.items()}
+            browse_responses = {instance_type: response.json(object_pairs_hook=OrderedDict)
+                                for instance_type, response in browse_responses.items()}
+
+            # Compare dual-stack to the baseline
+            if len(baseline['resources']) != len(browse_responses['dual-stack']['resources']) or \
+                    compare_base64_images(baseline['image'], browse_responses['dual-stack']['image']) < 0.98:
+                InstanceRunMessage.objects.create(
+                    instancerun=run,
+                    severity=logging.WARNING,
+                    message='Two identical requests returned different results. Results are going to be unpredictable.',
+                )
+
             for instance_type in instance_types:
                 InstanceRunResult.objects.update_or_create(
                     defaults={
-                        'ping_response': ping_responses[instance_type].json(object_pairs_hook=OrderedDict),
-                        'web_response': browse_responses[instance_type].json(object_pairs_hook=OrderedDict),
+                        'ping_response': ping_responses[instance_type],
+                        'web_response': browse_responses[instance_type],
                     },
                     instancerun=run,
                     marvin=marvins[instance_type],
@@ -170,8 +224,9 @@ def execute_instancerun(pk):
         print_message(_("Work on InstanceRun {run.pk} ({run.url}) completed").format(run=run))
 
     except RetryTaskException:
-        # Clear the started timestamp so it can be retried, and trigger retry
+        # Clear the started timestamp and messages so it can be retried, and trigger retry
         InstanceRun.objects.filter(pk=pk).update(started=None, finished=None)
+        InstanceRunMessage.objects.filter(instancerun_id=pk).delete()
         raise
 
     except InstanceRun.DoesNotExist:
@@ -183,6 +238,7 @@ def execute_instancerun(pk):
                                                              line=sys.exc_info()[-1].tb_lineno,
                                                              msg=ex))
 
-        # Clear the started timestamp so it can be retried, and trigger retry
+        # Clear the started timestamp and messages so it can be retried, and trigger retry
         InstanceRun.objects.filter(pk=pk).update(started=None, finished=None)
+        InstanceRunMessage.objects.filter(instancerun_id=pk).delete()
         raise RetryTaskException
