@@ -29,7 +29,6 @@ class InstanceRunViewSet(SerializerExtensionsAPIViewMixin, ModelViewSet):
     queryset = InstanceRun.objects.all()
     serializer_class = InstanceRunSerializer
     permission_classes = (DjangoModelPermissions,)
-    extensions_auto_optimize = True
     extensions_expand_id_only = {'messages', 'results'}
     extensions_exclude = {'results__id',
                           'results__instancerun',
