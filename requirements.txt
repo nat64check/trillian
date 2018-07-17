@@ -14,6 +14,7 @@ python-memcached
 pytz
 requests
 requests-futures
+scikit-image
 uwsgi_tasks
 
 # TODO: Consider OTP for Admin site
