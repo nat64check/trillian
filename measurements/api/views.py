@@ -1,10 +1,12 @@
-from rest_framework import permissions, viewsets
+from rest_framework.permissions import DjangoModelPermissions
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_serializer_extensions.views import SerializerExtensionsAPIViewMixin
 
 from measurements.api.serializers import InstanceRunResultsSerializer, InstanceRunSerializer
 from measurements.models import InstanceRun, InstanceRunResult
 
 
-class InstanceRunViewSet(viewsets.ModelViewSet):
+class InstanceRunViewSet(SerializerExtensionsAPIViewMixin, ModelViewSet):
     """
     list:
     Retrieve a list of instance runs.
@@ -26,10 +28,24 @@ class InstanceRunViewSet(viewsets.ModelViewSet):
     """
     queryset = InstanceRun.objects.all()
     serializer_class = InstanceRunSerializer
-    permission_classes = (permissions.DjangoModelPermissions,)
+    permission_classes = (DjangoModelPermissions,)
+    extensions_auto_optimize = True
+    extensions_expand_id_only = {'messages', 'results'}
+    extensions_exclude = {'results__id',
+                          'results__instancerun',
+                          'results__instancerun_id',
+                          'results___url',
+                          'results__marvin__id',
+                          'results__marvin___url'}
+
+    def get_extensions_mixin_context(self):
+        context = super().get_extensions_mixin_context()
+        if self.detail:
+            context['expand'] = {'messages', 'results__marvin'}
+        return context
 
 
-class InstanceRunResultsViewSet(viewsets.ModelViewSet):
+class InstanceRunResultsViewSet(ModelViewSet):
     """
     list:
     Retrieve a list of instance run results.
@@ -39,4 +55,4 @@ class InstanceRunResultsViewSet(viewsets.ModelViewSet):
     """
     queryset = InstanceRunResult.objects.all()
     serializer_class = InstanceRunResultsSerializer
-    permission_classes = (permissions.DjangoModelPermissions,)
+    permission_classes = (DjangoModelPermissions,)

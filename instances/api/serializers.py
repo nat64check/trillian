@@ -1,19 +1,17 @@
-from rest_framework import serializers
+from rest_framework.serializers import HyperlinkedModelSerializer
+from rest_framework_serializer_extensions.serializers import SerializerExtensionsMixin
 
 from instances.models import Marvin
 
 
-class PlainMarvinSerializer(serializers.HyperlinkedModelSerializer):
+class MarvinSerializer(SerializerExtensionsMixin, HyperlinkedModelSerializer):
     class Meta:
         model = Marvin
-        fields = ('instance_type',
+        fields = ('id',
+                  'instance_type',
                   'name', 'hostname',
                   'type', 'version',
                   'browser_name', 'browser_version',
                   'addresses',
-                  'first_seen', 'last_seen')
-
-
-class MarvinSerializer(PlainMarvinSerializer):
-    class Meta(PlainMarvinSerializer.Meta):
-        fields = ('id',) + PlainMarvinSerializer.Meta.fields + ('_url',)
+                  'first_seen', 'last_seen',
+                  '_url')

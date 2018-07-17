@@ -1,4 +1,5 @@
 import sys
+from traceback import print_exc
 from urllib.parse import urlsplit
 
 import requests
@@ -7,7 +8,7 @@ from requests.auth import AuthBase
 from uwsgi_tasks import RetryTaskException, task
 
 from instances.models import Zaphod
-from measurements.api.serializers import PlainInstanceRunSerializer
+from measurements.api.serializers import InstanceRunSerializer
 from .utils import print_error, print_message, print_warning, retry_get
 
 
@@ -45,7 +46,22 @@ def execute_update_zaphod(pk):
             url=run.callback_url,
             auth=auth,
             timeout=(5, 15),
-            json=PlainInstanceRunSerializer(instance=run, context={'request': None}).data
+            json=InstanceRunSerializer(instance=run, context={
+                'expand': {
+                    'messages',
+                    'results__marvin'
+                },
+                'exclude': {
+                    'id',
+                    '_url',
+                    'results__id',
+                    'results__instancerun',
+                    'results__instancerun_id',
+                    'results___url',
+                    'results__marvin__id',
+                    'results__marvin___url'
+                }
+            }).data
         )
 
         if response.status_code != 200:
@@ -68,5 +84,6 @@ def execute_update_zaphod(pk):
             line=sys.exc_info()[-1].tb_lineno,
             msg=ex
         ))
+        print_exc()
 
         raise RetryTaskException

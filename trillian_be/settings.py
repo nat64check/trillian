@@ -188,6 +188,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     'URL_FIELD_NAME': '_url',
+    'SERIALIZER_EXTENSIONS': {
+        'AUTO_OPTIMIZE': True,
+        'QUERY_PARAMS_ENABLED': False,
+    }
 }
 
 SWAGGER_SETTINGS = {

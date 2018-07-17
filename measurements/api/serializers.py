@@ -1,46 +1,48 @@
-from rest_framework import serializers
+from rest_framework.serializers import HyperlinkedModelSerializer
+from rest_framework_serializer_extensions.serializers import SerializerExtensionsMixin
 
-from instances.api.serializers import PlainMarvinSerializer
+from instances.api.serializers import MarvinSerializer
 from measurements.models import InstanceRun, InstanceRunMessage, InstanceRunResult
 
 
-class InstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
-    marvin = PlainMarvinSerializer(read_only=True)
-
+class InstanceRunResultsSerializer(SerializerExtensionsMixin, HyperlinkedModelSerializer):
     class Meta:
         model = InstanceRunResult
         fields = ('id', 'instancerun', 'instancerun_id', 'marvin', 'when', 'ping_response', 'web_response', '_url')
         read_only_fields = ('marvin', 'instance_type', 'ping_response', 'web_response')
+        expandable_fields = dict(
+            marvin=dict(
+                serializer=MarvinSerializer,
+                read_only=True,
+            )
+        )
 
 
-class PlainInstanceRunResultsSerializer(serializers.HyperlinkedModelSerializer):
-    marvin = PlainMarvinSerializer(read_only=True)
-
-    class Meta:
-        model = InstanceRunResult
-        fields = ('marvin', 'when', 'ping_response', 'web_response')
-
-
-class PlainInstanceRunMessageSerializer(serializers.HyperlinkedModelSerializer):
+class InstanceRunMessageSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = InstanceRunMessage
         fields = ('severity', 'message')
 
 
-class PlainInstanceRunSerializer(serializers.HyperlinkedModelSerializer):
-    results = PlainInstanceRunResultsSerializer(many=True, read_only=True)
-    messages = PlainInstanceRunMessageSerializer(many=True, read_only=True)
-
+class InstanceRunSerializer(SerializerExtensionsMixin, HyperlinkedModelSerializer):
     class Meta:
         model = InstanceRun
-        fields = ('url',
+        fields = ('id',
+                  'url',
                   'callback_url',
                   'requested', 'started', 'finished',
                   'dns_results',
-                  'results', 'messages')
+                  '_url')
         read_only_fields = ('started', 'finished', 'dns_results')
-
-
-class InstanceRunSerializer(PlainInstanceRunSerializer):
-    class Meta(PlainInstanceRunSerializer.Meta):
-        fields = ('id',) + PlainInstanceRunSerializer.Meta.fields + ('_url',)
+        expandable_fields = dict(
+            results=dict(
+                serializer=InstanceRunResultsSerializer,
+                many=True,
+                read_only=True,
+            ),
+            messages=dict(
+                serializer=InstanceRunMessageSerializer,
+                many=True,
+                read_only=True,
+            ),
+        )
