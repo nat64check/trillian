@@ -8,13 +8,13 @@ class CharArrayFilter(django_filters.BaseCSVFilter, django_filters.CharFilter):
 
 
 class MarvinFilter(django_filters.FilterSet):
-    address = CharArrayFilter(name='addresses', lookup_expr='contains')
+    address = CharArrayFilter(name='addresses', lookup_expr='icontains')
 
     class Meta:
         model = Marvin
         fields = {
-            'name': ['exact', 'contains'],
-            'hostname': ['exact', 'contains'],
+            'name': ['exact', 'icontains'],
+            'hostname': ['exact', 'icontains'],
             'type': ['exact'],
             'instance_type': ['exact'],
         }
