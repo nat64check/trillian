@@ -3,6 +3,7 @@ django-countries
 django_debug_toolbar
 django_extensions
 django-filter
+django-model-utils
 django-prettyjson
 django-rest-swagger
 djangorestframework
