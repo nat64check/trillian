@@ -112,16 +112,16 @@ def execute_instancerun(pk):
             run.started = now
             run.save()
 
-        # Do a simple DNS lookup
-        addresses = []
-        for info in socket.getaddrinfo(urlparse(run.url).hostname, port=80, proto=socket.IPPROTO_TCP):
-            family, socktype, proto, canonname, sockaddr = info
-            addresses.append(sockaddr[0])
-
-        run.dns_results = addresses
-
         # Log which instancerun we're working on
         print_message(_("Start working on InstanceRun {run.pk} ({run.url})").format(run=run))
+
+        # Do a simple DNS lookup
+        addresses = set()
+        for info in socket.getaddrinfo(urlparse(run.url).hostname, port=80, proto=socket.IPPROTO_TCP):
+            family, socktype, proto, canonname, sockaddr = info
+            addresses.add(ipaddress.ip_address(sockaddr[0]))
+
+        run.dns_results = list([str(address) for address in addresses])
 
         # First determine a baseline
         marvin = get_marvins(['dual-stack'])['dual-stack']
@@ -143,7 +143,15 @@ def execute_instancerun(pk):
 
             baseline = response.json()
 
-        instance_types = ['v4only', 'v6only', 'nat64', 'dual-stack']
+        # Determine which protocols to check
+        site_v4_addresses = [address for address in addresses if address.version == 4]
+        site_v6_addresses = [address for address in addresses if address.version == 6]
+        instance_types = {'nat64', 'dual-stack'}
+        if site_v4_addresses:
+            instance_types.add('v4only')
+        if site_v6_addresses:
+            instance_types.add('v6only')
+
         marvins = get_marvins(instance_types)
 
         with FuturesSession(executor=ThreadPoolExecutor(max_workers=len(marvins))) as session:
@@ -166,15 +174,28 @@ def execute_instancerun(pk):
 
                 ping_requests = {}
                 for instance_type, marvin in marvins.items():
-                    family = 4 if instance_type == 'v4only' else 6
-                    ping_requests[instance_type] = session.request(
-                        method='POST',
-                        url='http://{}:3001/ping{}'.format(marvin.name, family),
-                        json={
-                            'target': urlparse(run.url).hostname,
-                        },
-                        timeout=(5, 65)
-                    )
+                    marvin_has_v4 = instance_type in ('v4only', 'dual-stack')
+                    marvin_has_v6 = instance_type in ('v6only', 'dual-stack', 'nat64')
+
+                    if marvin_has_v4:
+                        for address in site_v4_addresses:
+                            address_str = str(address)
+                            ping_requests.setdefault(instance_type, {})[address_str] = session.request(
+                                method='POST',
+                                url='http://{}:3001/ping4'.format(marvin.name),
+                                json={'target': address_str},
+                                timeout=(5, 65)
+                            )
+
+                    if marvin_has_v6:
+                        for address in site_v6_addresses:
+                            address_str = str(address)
+                            ping_requests.setdefault(instance_type, {})[address_str] = session.request(
+                                method='POST',
+                                url='http://{}:3001/ping6'.format(marvin.name),
+                                json={'target': address_str},
+                                timeout=(5, 65)
+                            )
 
                 # Wait for all the responses to come back in
                 browse_responses = {}
@@ -182,8 +203,16 @@ def execute_instancerun(pk):
                     browse_responses[instance_type] = request.result()
 
                 ping_responses = {}
-                for instance_type, request in ping_requests.items():
-                    ping_responses[instance_type] = request.result()
+                for instance_type, address_requests in ping_requests.items():
+                    for address, request in address_requests.items():
+                        ping_responses[(instance_type, address)] = request.result()
+
+            for req, response in list(browse_responses.items()) + list(ping_responses.items()):
+                if response.status_code >= 300:
+                    print_error("{req} {url} ({code}): {json}".format(code=response.status_code,
+                                                                      req=req,
+                                                                      url=response.url,
+                                                                      json=response.json()))
 
             # Check if all tests succeeded
             if not all([response.status_code == 200
@@ -195,25 +224,28 @@ def execute_instancerun(pk):
                 raise RetryTaskException(timeout=timeout)
 
             # Parse all JSON
-            ping_responses = {instance_type: response.json(object_pairs_hook=OrderedDict)
-                              for instance_type, response in ping_responses.items()}
-            browse_responses = {instance_type: response.json(object_pairs_hook=OrderedDict)
-                                for instance_type, response in browse_responses.items()}
+            ping_responses_json = {}
+            for (instance_type, address), response in ping_responses.items():
+                ping_responses_json.setdefault(instance_type, {})
+                ping_responses_json[instance_type][address] = response.json(object_pairs_hook=OrderedDict)
+            browse_responses_json = {instance_type: response.json(object_pairs_hook=OrderedDict)
+                                     for instance_type, response in browse_responses.items()}
 
             # Compare dual-stack to the baseline
-            if len(baseline['resources']) != len(browse_responses['dual-stack']['resources']) or \
-                    compare_base64_images(baseline['image'], browse_responses['dual-stack']['image']) < 0.98:
+            if len(baseline['resources']) != len(browse_responses_json['dual-stack']['resources']) or \
+                    compare_base64_images(baseline['image'], browse_responses_json['dual-stack']['image']) < 0.98:
                 InstanceRunMessage.objects.create(
                     instancerun=run,
                     severity=logging.WARNING,
-                    message='Two identical requests returned different results. Results are going to be unpredictable.',
+                    message=gettext_noop('Two identical requests returned different results. '
+                                         'Results are going to be unpredictable.'),
                 )
 
             for instance_type in instance_types:
                 InstanceRunResult.objects.update_or_create(
                     defaults={
-                        'ping_response': ping_responses[instance_type],
-                        'web_response': browse_responses[instance_type],
+                        'ping_response': ping_responses_json[instance_type],
+                        'web_response': browse_responses_json[instance_type],
                     },
                     instancerun=run,
                     marvin=marvins[instance_type],
@@ -239,6 +271,7 @@ def execute_instancerun(pk):
         print_error(_('{name} on line {line}: {msg}').format(name=type(ex).__name__,
                                                              line=sys.exc_info()[-1].tb_lineno,
                                                              msg=ex))
+        print_error(format_exc())
 
         # Clear the started timestamp and messages so it can be retried, and trigger retry
         InstanceRun.objects.filter(pk=pk).update(started=None, finished=None)
