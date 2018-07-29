@@ -7,6 +7,7 @@ import sys
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import ExitStack
+from ipaddress import IPv6Address
 from random import randrange
 from traceback import format_exc
 from urllib.parse import urlparse
@@ -149,12 +150,25 @@ def execute_instancerun(pk):
         instance_types = {'nat64', 'dual-stack'}
         if site_v4_addresses:
             instance_types.add('v4only')
+        else:
+            InstanceRunMessage.objects.create(
+                instancerun=run,
+                severity=logging.WARNING,
+                message=gettext_noop('This website has no IPv4 addresses so the IPv4-only test is skipped'),
+            )
+
         if site_v6_addresses:
             instance_types.add('v6only')
+        else:
+            InstanceRunMessage.objects.create(
+                instancerun=run,
+                severity=logging.WARNING,
+                message=gettext_noop('This website has no IPv6 addresses so the IPv6-only test is skipped'),
+            )
 
         marvins = get_marvins(instance_types)
 
-        with FuturesSession(executor=ThreadPoolExecutor(max_workers=len(marvins))) as session:
+        with FuturesSession(executor=ThreadPoolExecutor(max_workers=2 * len(marvins))) as session:
             with ExitStack() as stack:
                 # Signal usage of Marvins
                 for marvin in marvins.values():
@@ -175,6 +189,7 @@ def execute_instancerun(pk):
                 ping_requests = {}
                 for instance_type, marvin in marvins.items():
                     marvin_has_v4 = instance_type in ('v4only', 'dual-stack')
+                    marvin_has_nat64 = instance_type in ('nat64',)
                     marvin_has_v6 = instance_type in ('v6only', 'dual-stack', 'nat64')
 
                     if marvin_has_v4:
@@ -183,6 +198,16 @@ def execute_instancerun(pk):
                             ping_requests.setdefault(instance_type, {})[address_str] = session.request(
                                 method='POST',
                                 url='http://{}:3001/ping4'.format(marvin.name),
+                                json={'target': address_str},
+                                timeout=(5, 65)
+                            )
+
+                    if marvin_has_nat64:
+                        for address in site_v4_addresses:
+                            address_str = str(IPv6Address('64:ff9b::') + int(address))
+                            ping_requests.setdefault(instance_type, {})[address_str] = session.request(
+                                method='POST',
+                                url='http://{}:3001/ping6'.format(marvin.name),
                                 json={'target': address_str},
                                 timeout=(5, 65)
                             )
