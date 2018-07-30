@@ -73,7 +73,7 @@ def find_marvins(instance_types):
     return found
 
 
-def get_marvins(instance_types):
+def get_marvins(instance_types, current_task):
     # We should now be the only spooler running this task
     marvins = find_marvins(instance_types)
     if not all(marvins.values()):
@@ -83,7 +83,6 @@ def get_marvins(instance_types):
             timeout=timeout
         ))
         # Retry without lowering the retry count
-        current_task = get_current_task()
         raise RetryTaskException(count=current_task.setup['retry_count'], timeout=timeout)
 
     print_message(_("Found Marvins: {}").format(', '.join(['{}: {}'.format(instance_type, marvin.name)
@@ -95,6 +94,8 @@ def get_marvins(instance_types):
 @task(retry_count=5, retry_timeout=300)
 def execute_instancerun(pk):
     from measurements.models import InstanceRun, InstanceRunResult
+
+    current_task = get_current_task()
 
     try:
         # Make sure we need to start and we don't start twice
@@ -125,7 +126,7 @@ def execute_instancerun(pk):
         run.dns_results = list([str(address) for address in addresses])
 
         # First determine a baseline
-        marvin = get_marvins(['dual-stack'])['dual-stack']
+        marvin = get_marvins(['dual-stack'], current_task)['dual-stack']
         with marvin:
             response = requests.request(
                 method='POST',
@@ -166,7 +167,7 @@ def execute_instancerun(pk):
                 message=gettext_noop('This website has no IPv6 addresses so the IPv6-only test is skipped'),
             )
 
-        marvins = get_marvins(instance_types)
+        marvins = get_marvins(instance_types, current_task)
 
         with FuturesSession(executor=ThreadPoolExecutor(max_workers=2 * len(marvins))) as session:
             with ExitStack() as stack:
