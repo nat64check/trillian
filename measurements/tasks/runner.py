@@ -183,6 +183,7 @@ def execute_instancerun(pk):
                         url='http://{}:3001/browse'.format(marvin.name),
                         json={
                             'url': run.url,
+                            'timeout': 30,
                         },
                         timeout=(5, 65)
                     )
