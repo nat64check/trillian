@@ -4,7 +4,8 @@
     "fields": {
       "name": "Zaphods",
       "permissions": [
-        ["add_instancerun", "measurements", "instancerun"]
+        ["add_instancerun", "measurements", "instancerun"],
+        ["delete_instancerun", "measurements", "instancerun"]
       ]
     }
   },
